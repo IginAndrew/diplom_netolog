@@ -13,14 +13,14 @@ class VkTools():
         try:
             info = self.ext_api.method('users.get',
                                     {'user_id': user_id,
-                                    'fields': 'bdate,city,sex'
+                                    'fields': 'bdate,city,sex,relation'
                                     }
                                     )
         except ApiError:
-            return 
-        
+            return
         return info
-    
+
+
 
     
     def user_serch(self, city_id, age_from, age_to, sex, offset = None):
@@ -31,7 +31,7 @@ class VkTools():
                                         'age_from': age_from,
                                         'age_to': age_to,
                                         'sex': sex,
-                                        'count': 30,
+                                        'count': 5,
                                         'offset': offset
                                         })
 
@@ -82,17 +82,18 @@ class VkTools():
 if __name__ == '__main__':
     tools = VkTools(acces_token)
 
+
     info = tools.get_profile_info(767605949)
     if info:
         print(tools.get_profile_info(767605949))
+        for i in info[0]:
+            print (i)
+        print(info[0]['relation'])
     else:
-        pass
-    profiles = tools.user_serch(1, 20, 40, 1)
-    print(profiles)
+        print('Error')
+    # profiles = tools.user_serch(4644, 20, 40, 1)
 
-    photos = tools.photos_get(767605949)
-    print(photos)
-
+    # #
    
 
 
