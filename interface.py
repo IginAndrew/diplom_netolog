@@ -44,7 +44,7 @@ class BotInterface():
                                     photo_id = i['id']
                                     media = f'photo{ower}_{photo_id}'
                                     print(ower, photo_id)
-                                    self.message_send((info[0]['id']), 'фото', attachment=media)
+                                    self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
                                 # media = f'photo{ower}_{photo_id}'
                                 # self.message_send((info[0]['id']),'фото', attachment=media)
                             self.message_send((info[0]['id']), 'для продолжения набери "далее"')
@@ -57,7 +57,7 @@ class BotInterface():
                                     photo_id = i['id']
                                     media = f'photo{ower}_{photo_id}'
                                     print(ower, photo_id)
-                                    self.message_send((info[0]['id']), 'фото', attachment=media)
+                                    self.message_send((info[0]['id']), (profiles[0]['name']), attachment=media)
                             self.message_send((info[0]['id']), 'для продолжения набери "далее"')
                 elif event.text.lower() == 'далее':
                     pass

@@ -83,15 +83,16 @@ if __name__ == '__main__':
     tools = VkTools(acces_token)
 
 
-    info = tools.get_profile_info(767605949)
-    if info:
-        print(tools.get_profile_info(767605949))
-        for i in info[0]:
-            print (i)
-        print(info[0]['relation'])
-    else:
-        print('Error')
-    # profiles = tools.user_serch(4644, 20, 40, 1)
+    # info = tools.get_profile_info(767605949)
+    # if info:
+    #     print(tools.get_profile_info(767605949))
+    #     for i in info[0]:
+    #         print (i)
+    #     print(info[0]['relation'])
+    # else:
+    #     print('Error')
+    profiles = tools.user_serch(4644, 20, 40, 1)
+    print(profiles[0]['name'])
 
     # #
    
