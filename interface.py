@@ -68,7 +68,7 @@ class BotInterface():
                                         media = f'photo{ower}_{photo_id}'
                                         print(ower, photo_id)
                                         self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
-                            self.message_send((info[0]['id']), 'для продолжения набери "далее"')
+                            self.message_send((info[0]['id']), 'для продолжения набери "далее "')
                         elif (info[0]['sex']) == 1:
                             profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, 2, offset)
                             for search in range((len(profiles))):

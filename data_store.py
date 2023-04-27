@@ -23,7 +23,8 @@ def create_table_off():
     c.execute('''
     CREATE TABLE IF NOT EXISTS user_off 
     (
-	id_user_off INT PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+	id_user_off INTEGER,
 	id_user_int INTEGER NOT NULL,
 	FOREIGN KEY (id_user_int) REFERENCES user_int (id_user)
 	ON DELETE CASCADE)
@@ -83,9 +84,8 @@ def select_user_int_off(id):
 
 
 if __name__ == '__main__':
-    # pass
-    # create_table()
-    # create_table_off()
+    create_table()
+    create_table_off()
     # print(select_user_int_off(767605949))
     # user_int_off_insert(78826800, 767605949)
-    print(select_user_int_off(479056077))
+    # print(select_user_int_off(479056077))
