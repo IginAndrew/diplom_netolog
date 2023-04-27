@@ -57,20 +57,20 @@ def select_user_int():
     return total
 
 
-def select_user_int_count():
+def select_user_int_count(id):
     conn = get_connection()
     c = conn.cursor()
-    c.execute('''SELECT COUNT(id_user_off) FROM user_off''')
+    c.execute('''SELECT COUNT(id_user_off) FROM user_off WHERE id_user_int = (?)''', (id,))
     id = c.fetchone()
     total = 0
     for i in id:
         total+=i
     return total
 
-def select_user_int_off():
+def select_user_int_off(id):
     conn = get_connection()
     c = conn.cursor()
-    c.execute('''SELECT id_user_off FROM user_off''')
+    c.execute('''SELECT id_user_off FROM user_off WHERE id_user_int = (?)''', (id,))
     id = c.fetchall()
     total = []
     for i in id:
@@ -86,4 +86,6 @@ if __name__ == '__main__':
     # pass
     # create_table()
     # create_table_off()
-    print(select_user_int_count())
+    # print(select_user_int_off(767605949))
+    # user_int_off_insert(78826800, 767605949)
+    print(select_user_int_off(479056077))
