@@ -3,7 +3,7 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 from vk_api.utils import get_random_id
 from core import *
 from config import acces_token, comunity_token
-
+from data_store import user_int_insert, user_int_off_insert, select_user_int, select_user_int_off, select_user_int_count
 
 
 class BotInterface():
@@ -30,21 +30,48 @@ class BotInterface():
         longpull = VkLongPoll(self.bot)
         for event in longpull.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                if event.text.lower() == 'привет':
-                    self.message_send(event.user_id, 'Добрый день! Для поиска пары наберите слово "поиск"')
-                elif event.text.lower() in ('поиск', 'далее'):
-                    info = self.tools.get_profile_info(event.user_id)
+                info = self.tools.get_profile_info(event.user_id)
+                offset = 2 * select_user_int_count()
+                if event.text.lower() in ('привет', 'ghbdtn'):
+                    # info = self.tools.get_profile_info(event.user_id)
+                    if (str(info[0]['id'])) in select_user_int():
+                    # user_int_insert(int(info[0]['id']))
+                        self.message_send(event.user_id, 'Добрый день! Для поиска пары наберите слово "поиск"')
+                    else:
+                        user_int_insert(int(info[0]['id']))
+                        self.message_send(event.user_id, 'Добрый день! Для поиска пары наберите слово "поиск"')
+                elif event.text.lower() in ('поиск', 'gjbcr'):
+                    # info = self.tools.get_profile_info(event.user_id)
+                    # print(info[0]['relation'])
                     if info[0]['relation'] != 4:
                         if (info[0]['sex']) == 2:
-                            profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, 1)
-                            for search in range(len(profiles)):
-                                photos = self.tools.photos_get(profiles[search]['id'])
-                                for i in photos:
-                                    ower = i['owner_id']
-                                    photo_id = i['id']
-                                    media = f'photo{ower}_{photo_id}'
-                                    print(ower, photo_id)
-                                    self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+                            # offset = 3
+                            profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, 1, offset)
+
+                            for search in range((len(profiles))):
+                                print(str(profiles[search]['id']))
+                                if ((str(profiles[search]['id'])) not in select_user_int_off()) and ((str(info[0]['id'])) not in select_user_int()):
+                                    user_int_off_insert((int(profiles[search]['id'])), (int(info[0]['id'])))
+                                    user_int_insert(int(info[0]['id']))
+                                    photos = self.tools.photos_get(profiles[search]['id'])
+                                    offset += search
+                                    for i in photos:
+                                        ower = i['owner_id']
+                                        photo_id = i['id']
+                                        media = f'photo{ower}_{photo_id}'
+                                        print(ower, photo_id)
+                                        self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+                                elif (str(profiles[search]['id'])) not in select_user_int_off():
+                                    user_int_off_insert((int(profiles[search]['id'])), (int(info[0]['id'])))
+                                    photos = self.tools.photos_get(profiles[search]['id'])
+                                    offset += search
+                                    for i in photos:
+                                        ower = i['owner_id']
+                                        photo_id = i['id']
+                                        media = f'photo{ower}_{photo_id}'
+                                        print(ower, photo_id)
+                                        self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+
                                 # media = f'photo{ower}_{photo_id}'
                                 # self.message_send((info[0]['id']),'фото', attachment=media)
                             self.message_send((info[0]['id']), 'для продолжения набери "далее"')
@@ -59,8 +86,21 @@ class BotInterface():
                                     print(ower, photo_id)
                                     self.message_send((info[0]['id']), (profiles[0]['name']), attachment=media)
                             self.message_send((info[0]['id']), 'для продолжения набери "далее"')
-                elif event.text.lower() == 'далее':
-                    pass
+                elif event.text.lower() in ('далее', 'lfktt'):
+                    profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, 1, offset)
+                    print(offset)
+                    for search in range((len(profiles))):
+                        print(str(profiles[search]['id']))
+                        if (str(profiles[search]['id'])) in select_user_int_off():
+                            continue
+                        user_int_off_insert((int(profiles[search]['id'])), (int(info[0]['id'])))
+                        photos = self.tools.photos_get(profiles[search]['id'])
+                        for i in photos:
+                            ower = i['owner_id']
+                            photo_id = i['id']
+                            media = f'photo{ower}_{photo_id}'
+                            print(ower, photo_id)
+                            self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
                 else: 
                     self.message_send(event.user_id, 'неизвестная команда')
 

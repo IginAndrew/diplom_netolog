@@ -31,7 +31,7 @@ class VkTools():
                                         'age_from': age_from,
                                         'age_to': age_to,
                                         'sex': sex,
-                                        'count': 5,
+                                        'count': 3,
                                         'offset': offset
                                         })
 
@@ -92,7 +92,8 @@ if __name__ == '__main__':
     # else:
     #     print('Error')
     profiles = tools.user_serch(4644, 20, 40, 1)
-    print(profiles[0]['name'])
+    # print(profiles)
+    print(tools.user_serch(4644,20,40,2))
 
     # #
    
