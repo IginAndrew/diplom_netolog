@@ -14,7 +14,7 @@ class BotInterface():
 
 
 
-    def message_send(self, user_id, message=None, attachment=None):
+    def message_send(self, user_id, message=None, message1=None, attachment=None):
         name = self.bot.method('messages.send',
                         {'user_id': user_id,
                          'message': message,
@@ -31,6 +31,7 @@ class BotInterface():
         for event in longpull.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 info = self.tools.get_profile_info(event.user_id)
+                print (info)
                 offset = 2 * select_user_int_count(int(info[0]['id']))
                 if event.text.lower() in ('привет', 'ghbdtn'):
                     # info = self.tools.get_profile_info(event.user_id)
@@ -51,23 +52,33 @@ class BotInterface():
                                     user_int_insert(int(info[0]['id']))
                                     photos = self.tools.photo_like(profiles[search]['id'])
                                     offset += search
-                                    for i in photos:
-                                        ower = i['owner_id']
-                                        photo_id = i['id']
+
+
+                                    self.message_send((info[0]['id']),(f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'))
+                                    for photo in photos:
+                                        ower = photo['owner_id']
+                                        photo_id = photo['id']
                                         media = f'photo{ower}_{photo_id}'
+
                                         print(ower, photo_id)
-                                        self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+                                        self.message_send((info[0]['id']),  attachment=media)
+
+
                                 elif ((str(profiles[search]['id'])) not in select_user_int_off((int(info[0]['id'])))):
                                     print(int(profiles[search]['id']))
                                     user_int_off_insert((int(profiles[search]['id'])), (int(info[0]['id'])))
                                     photos = self.tools.photo_like(profiles[search]['id'])
                                     offset += search
-                                    for i in photos:
-                                        ower = i['owner_id']
-                                        photo_id = i['id']
+
+                                    self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'))
+                                    for photo in photos:
+                                        ower = photo['owner_id']
+                                        photo_id = photo['id']
                                         media = f'photo{ower}_{photo_id}'
                                         print(ower, photo_id)
-                                        self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+                                        self.message_send((info[0]['id']),  attachment=media)
+
+
                             self.message_send((info[0]['id']), 'для продолжения набери "далее "')
                         elif (info[0]['sex']) == 1:
                             profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, 2, offset)
@@ -78,23 +89,30 @@ class BotInterface():
                                     user_int_insert(int(info[0]['id']))
                                     photos = self.tools.photo_like(profiles[search]['id'])
                                     offset += search
-                                    for i in photos:
-                                        ower = i['owner_id']
-                                        photo_id = i['id']
+
+                                    self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'))
+                                    for photo in photos:
+                                        ower = photo['owner_id']
+                                        photo_id = photo['id']
                                         media = f'photo{ower}_{photo_id}'
                                         print(ower, photo_id)
-                                        self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+                                        self.message_send((info[0]['id']), attachment=media)
 
                                 elif (str(profiles[search]['id'])) not in select_user_int_off((int(info[0]['id']))):
                                     user_int_off_insert((int(profiles[search]['id'])), (int(info[0]['id'])))
                                     photos = self.tools.photo_like(profiles[search]['id'])
                                     offset += search
-                                    for i in photos:
-                                        ower = i['owner_id']
-                                        photo_id = i['id']
+
+
+                                    self.message_send((info[0]['id']),(f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'))
+                                    for photo in photos:
+                                        ower = photo['owner_id']
+                                        photo_id = photo['id']
                                         media = f'photo{ower}_{photo_id}'
                                         print(ower, photo_id)
-                                        self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+                                        self.message_send((info[0]['id']),attachment=media)
+
+
                             self.message_send((info[0]['id']), 'для продолжения набери "далее"')
                     else:
                         self.message_send((info[0]['id']), 'укажи свое семейное положение')
@@ -109,11 +127,15 @@ class BotInterface():
                                 continue
                             user_int_off_insert((int(profiles[search]['id'])), (int(info[0]['id'])))
                             photos = self.tools.photo_like(profiles[search]['id'])
-                            for i in photos:
-                                ower = i['owner_id']
-                                photo_id = i['id']
+
+                            self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'))
+                            for photo in photos:
+                                ower = photo['owner_id']
+                                photo_id = photo['id']
                                 media = f'photo{ower}_{photo_id}'
-                                self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+                                self.message_send((info[0]['id']), attachment=media)
+
+
                         self.message_send((info[0]['id']), 'для продолжения набери "далее"')
                     if (info[0]['sex']) == 1 and info[0]['relation'] != 4:
                         profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, 2, offset)
@@ -124,11 +146,15 @@ class BotInterface():
                                 continue
                             user_int_off_insert((int(profiles[search]['id'])), (int(info[0]['id'])))
                             photos = self.tools.photo_like(profiles[search]['id'])
-                            for i in photos:
-                                ower = i['owner_id']
-                                photo_id = i['id']
+
+                            self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'))
+                            for photo in photos:
+                                ower = photo['owner_id']
+                                photo_id = photo['id']
                                 media = f'photo{ower}_{photo_id}'
-                                self.message_send((info[0]['id']), (profiles[search]['name']), attachment=media)
+                                self.message_send((info[0]['id']), attachment=media)
+
+
                         self.message_send((info[0]['id']), 'для продолжения набери "далее"')
                 else: 
                     self.message_send(event.user_id, 'неизвестная команда')
