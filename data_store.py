@@ -83,11 +83,12 @@ def select_user_int_off(con, id):
 
 
 
-
+con = get_connection()
 
 if __name__ == '__main__':
-    con = get_connection()
+
     create_table(con)
+    # select_user_int_count(con, 767605949)
     # create_table_off(con)
     # print(select_user_int_off(con, 767605949))
     #
