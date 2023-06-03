@@ -75,7 +75,7 @@ class BotInterface():
                                         self.message_send((info[0]['id']),  attachment=media)
 
 
-                                    self.message_send((info[0]['id']), 'для продолжения набери "далее "')
+                                    # self.message_send((info[0]['id']), 'для продолжения набери "далее "')
 
 
                                 elif (str(profiles[search]['id'])) not in select_user_int_off(con, (int(info[0]['id']))):
@@ -91,7 +91,7 @@ class BotInterface():
                                         self.message_send((info[0]['id']),attachment=media)
 
 
-                                    self.message_send((info[0]['id']), 'Для продолжения наберите "далее"')
+                            self.message_send((info[0]['id']), 'Для продолжения наберите "далее"')
                     except KeyError:
                         self.message_send((info[0]['id']), 'Укажите свое семейное положение в профиле')
 
@@ -115,6 +115,7 @@ class BotInterface():
                     self.message_send((info[0]['id']), 'Для продолжения наберите "далее"')
                 else: 
                     self.message_send(event.user_id, 'Неизвестная команда!!!')
+
 
 
     def sex_id(self, sex):
