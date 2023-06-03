@@ -4,7 +4,7 @@ from vk_api.utils import get_random_id
 from core import *
 from config import acces_token, comunity_token
 from data_store import *
-
+from datetime import date
 
 class BotInterface():
     def __init__(self, token):
@@ -14,7 +14,7 @@ class BotInterface():
 
 
 
-    def message_send(self, user_id, message=None, message1=None, attachment=None):
+    def message_send(self, user_id, message=None, attachment=None):
         name = self.bot.method('messages.send',
                         {'user_id': user_id,
                          'message': message,
@@ -32,6 +32,10 @@ class BotInterface():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
                 info = self.tools.get_profile_info(event.user_id)
                 print(f'В бот зашел {info}')
+
+                age = (info[0]['bdate'])
+                age_my = self.calculate_age(int(age[-4:]))
+
                 offset = 2 * select_user_int_count(con, int(info[0]['id']))
                 if event.text.lower() in ('привет'):
 
@@ -42,15 +46,14 @@ class BotInterface():
                         user_int_insert(con, int(info[0]['id']))
                         self.message_send(event.user_id, 'Добрый день! Для поиска пары наберите слово "поиск"')
                 elif event.text.lower() in ('поиск'):
-                    # self.message_send(event.user_id, "Укажите минимальный возраст будущей пары!")
-                    # min_age = event.text()
+
                     try:
                         if info[0]['relation'] != 4:
-                            profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, self.sex_id(info[0]['sex']), offset)
+                            profiles = self.tools.user_serch((info[0]['city']['id']), age_my-5, age_my+5, self.sex_id(info[0]['sex']), offset)
                             for search in range((len(profiles))):
                                 profiles_big = self.tools.get_profile_info(profiles[search]["id"])
                                 print(profiles_big) # отладка
-                                if ((str(profiles[search]['id'])) not in select_user_int_off(con, (int(info[0]['id'])))) and ((str(info[0]['id'])) not in select_user_int(con)):
+                                if ((str(profiles[search]['id'])) not in select_user_int_off(con, (int(info[0]['id'])))) and ((str(info[0]['id'])) not in select_user_int(con)) :
                                     user_int_insert(con, int(info[0]['id']))
                                     self.photo_list(profiles, info,search)
 
@@ -65,7 +68,7 @@ class BotInterface():
 
                 elif event.text.lower() in ('далее'):
 
-                    profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, self.sex_id(info[0]['sex']), offset)
+                    profiles = self.tools.user_serch((info[0]['city']['id']), age_my-5, age_my+5, self.sex_id(info[0]['sex']), offset)
                     for search in range((len(profiles))):
                         offset += search
                         if (str(profiles[search]['id'])) in select_user_int_off(con, (int(info[0]['id']))):
@@ -86,16 +89,21 @@ class BotInterface():
             media = f'photo{ower}_{photo_id}'
             self.message_send((info[0]['id']), attachment=media)
 
+
+
     def sex_id(self, sex):
         if sex == 2:
             return 1
         else:
             return 2
 
+    def calculate_age(self, year):
+        today = date.today()
+        return today.year - year
+
 
 
 if __name__ == '__main__':
-    # con = get_connection()
     bot = BotInterface(comunity_token)
     bot.handler()
 
