@@ -14,7 +14,7 @@ class BotInterface():
 
 
 
-    def message_send(self, user_id, message=None, attachment=None):
+    def message_send(self, user_id, message=None,  attachment=None):
         name = self.bot.method('messages.send',
                         {'user_id': user_id,
                          'message': message,
@@ -82,12 +82,15 @@ class BotInterface():
     def photo_list(self, profiles, info, search):
         user_int_off_insert(con, (int(profiles[search]['id'])), (int(info[0]['id'])))
         photos = self.tools.photo_like(profiles[search]['id'])
-        self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'))
+        media_box = ''
         for photo in photos:
             ower = photo['owner_id']
             photo_id = photo['id']
-            media = f'photo{ower}_{photo_id}'
-            self.message_send((info[0]['id']), attachment=media)
+            media = f'photo{ower}_{photo_id}, '
+            media_box += media
+        print(media_box)
+        self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'), attachment=media_box)
+
 
 
 
