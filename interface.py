@@ -30,10 +30,8 @@ class BotInterface():
         longpull = VkLongPoll(self.bot)
         for event in longpull.listen():
             if event.type == VkEventType.MESSAGE_NEW and event.to_me:
-                global info
                 info = self.tools.get_profile_info(event.user_id)
                 print(f'В бот зашел {info}')
-                # global offset
                 offset = 2 * select_user_int_count(con, int(info[0]['id']))
                 if event.text.lower() in ('привет'):
 
@@ -44,20 +42,21 @@ class BotInterface():
                         user_int_insert(con, int(info[0]['id']))
                         self.message_send(event.user_id, 'Добрый день! Для поиска пары наберите слово "поиск"')
                 elif event.text.lower() in ('поиск'):
+                    # self.message_send(event.user_id, "Укажите минимальный возраст будущей пары!")
+                    # min_age = event.text()
                     try:
                         if info[0]['relation'] != 4:
-                            global profiles
                             profiles = self.tools.user_serch((info[0]['city']['id']), 20, 40, self.sex_id(info[0]['sex']), offset)
                             for search in range((len(profiles))):
                                 profiles_big = self.tools.get_profile_info(profiles[search]["id"])
                                 print(profiles_big) # отладка
                                 if ((str(profiles[search]['id'])) not in select_user_int_off(con, (int(info[0]['id'])))) and ((str(info[0]['id'])) not in select_user_int(con)):
                                     user_int_insert(con, int(info[0]['id']))
-                                    self.photo_list(search)
+                                    self.photo_list(profiles, info,search)
 
 
                                 elif (str(profiles[search]['id'])) not in select_user_int_off(con, (int(info[0]['id']))):
-                                    self.photo_list(search)
+                                    self.photo_list(profiles, info, search)
 
 
                             self.message_send((info[0]['id']), 'Для продолжения наберите "далее"')
@@ -71,13 +70,13 @@ class BotInterface():
                         offset += search
                         if (str(profiles[search]['id'])) in select_user_int_off(con, (int(info[0]['id']))):
                             continue
-                        self.photo_list(search)
+                        self.photo_list(profiles, info, search)
 
                     self.message_send((info[0]['id']), 'Для продолжения наберите "далее"')
                 else: 
                     self.message_send(event.user_id, 'Неизвестная команда!!!')
 
-    def photo_list(self, search):
+    def photo_list(self, profiles, info, search):
         user_int_off_insert(con, (int(profiles[search]['id'])), (int(info[0]['id'])))
         photos = self.tools.photo_like(profiles[search]['id'])
         self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'))
