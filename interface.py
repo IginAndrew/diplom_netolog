@@ -86,7 +86,7 @@ class BotInterface():
         for photo in photos:
             ower = photo['owner_id']
             photo_id = photo['id']
-            media = f'photo{ower}_{photo_id}, '
+            media = f'photo{ower}_{photo_id},'
             media_box += media
         print(media_box)
         self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'), attachment=media_box)
