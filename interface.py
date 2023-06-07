@@ -36,14 +36,14 @@ class BotInterface():
                 age = (info[0]['bdate'])
                 age_my = self.calculate_age(int(age[-4:]))
 
-                offset = 2 * select_user_int_count(con, int(info[0]['id']))
+                offset = 2 * select_user_int_count(int(info[0]['id']))
                 if event.text.lower() in ('привет'):
 
-                    if (str(info[0]['id'])) in select_user_int(con):
+                    if (str(info[0]['id'])) in select_user_int():
 
                         self.message_send(event.user_id, 'Добрый день! Для поиска пары наберите слово "поиск"')
                     else:
-                        user_int_insert(con, int(info[0]['id']))
+                        user_int_insert(int(info[0]['id']))
                         self.message_send(event.user_id, 'Добрый день! Для поиска пары наберите слово "поиск"')
                 elif event.text.lower() in ('поиск'):
 
@@ -53,12 +53,12 @@ class BotInterface():
                             for search in range((len(profiles))):
                                 profiles_big = self.tools.get_profile_info(profiles[search]["id"])
                                 print(profiles_big) # отладка
-                                if ((str(profiles[search]['id'])) not in select_user_int_off(con, (int(info[0]['id'])))) and ((str(info[0]['id'])) not in select_user_int(con)) :
-                                    user_int_insert(con, int(info[0]['id']))
+                                if ((str(profiles[search]['id'])) not in select_user_int_off(int(info[0]['id']))) and ((str(info[0]['id'])) not in select_user_int()) :
+                                    user_int_insert(int(info[0]['id']))
                                     self.photo_list(profiles, info,search)
 
 
-                                elif (str(profiles[search]['id'])) not in select_user_int_off(con, (int(info[0]['id']))):
+                                elif (str(profiles[search]['id'])) not in select_user_int_off(int(info[0]['id'])):
                                     self.photo_list(profiles, info, search)
 
 
@@ -71,7 +71,7 @@ class BotInterface():
                     profiles = self.tools.user_serch((info[0]['city']['id']), age_my-5, age_my+5, self.sex_id(info[0]['sex']), offset)
                     for search in range((len(profiles))):
                         offset += search
-                        if (str(profiles[search]['id'])) in select_user_int_off(con, (int(info[0]['id']))):
+                        if (str(profiles[search]['id'])) in select_user_int_off(int(info[0]['id'])):
                             continue
                         self.photo_list(profiles, info, search)
 
@@ -80,7 +80,7 @@ class BotInterface():
                     self.message_send(event.user_id, 'Неизвестная команда!!!')
 
     def photo_list(self, profiles, info, search):
-        user_int_off_insert(con, (int(profiles[search]['id'])), (int(info[0]['id'])))
+        user_int_off_insert(int(profiles[search]['id']), (int(info[0]['id'])))
         photos = self.tools.photo_like(profiles[search]['id'])
         media_box = ''
         for photo in photos:

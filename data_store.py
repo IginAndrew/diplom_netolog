@@ -10,7 +10,8 @@ def get_connection():
 
 
 
-def create_table(con):
+def create_table():
+    con = get_connection()
     with con:
         c = con.cursor()
     c.execute("""CREATE TABLE IF NOT EXISTS user_int
@@ -19,7 +20,8 @@ def create_table(con):
     """)
     con.commit()
 
-def create_table_off(con):
+def create_table_off():
+    con = get_connection()
     with con:
         c = con.cursor()
     c.execute('''
@@ -33,7 +35,8 @@ def create_table_off(con):
 	''')
     con.commit()
 
-def user_int_insert(con, id):
+def user_int_insert(id):
+    con = get_connection()
     with con:
         c = con.cursor()
     c.execute("""INSERT INTO user_int (id_user) 
@@ -41,7 +44,8 @@ values(?)
     """, (id,))
     con.commit()
 
-def user_int_off_insert(con, id, id_user):
+def user_int_off_insert(id, id_user):
+    con = get_connection()
     with con:
         c = con.cursor()
     c.execute("""INSERT INTO user_off (id_user_off, id_user_int) 
@@ -49,7 +53,8 @@ values(?, ?)
     """, (id,id_user,))
     con.commit()
 
-def select_user_int(con):
+def select_user_int():
+    con = get_connection()
     with con:
         c = con.cursor()
     c.execute('''SELECT * FROM user_int''')
@@ -60,7 +65,8 @@ def select_user_int(con):
     return total
 
 
-def select_user_int_count(con, id):
+def select_user_int_count(id):
+    con = get_connection()
     with con:
         c = con.cursor()
     c.execute('''SELECT COUNT(id_user_off) FROM user_off WHERE id_user_int = (?)''', (id,))
@@ -70,7 +76,8 @@ def select_user_int_count(con, id):
         total+=i
     return total
 
-def select_user_int_off(con, id):
+def select_user_int_off(id):
+    con = get_connection()
     with con:
         c = con.cursor()
     c.execute('''SELECT id_user_off FROM user_off WHERE id_user_int = (?)''', (id,))
@@ -83,14 +90,14 @@ def select_user_int_off(con, id):
 
 
 
-con = get_connection()
+
 
 if __name__ == '__main__':
 
-    create_table(con)
-    # select_user_int_count(con, 767605949)
+    create_table()
+    # select_user_int_count(767605949)
     # create_table_off(con)
-    # print(select_user_int_off(con, 767605949))
+    # print(select_user_int_off(767605949))
     #
-    # user_int_off_insert(con, 78826800, 767605949)
-    # print(select_user_int_off(con, 479056077))
+    # user_int_off_insert(78826800, 767605949)
+    # print(select_user_int_off(479056077))
