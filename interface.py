@@ -25,6 +25,29 @@ class BotInterface():
 
         return name
 
+    def photo_list(self, profiles, info, search):
+        user_int_off_insert(int(profiles[search]['id']), (int(info[0]['id'])))
+        photos = self.tools.photo_like(profiles[search]['id'])
+        media_box = ''
+        for photo in photos:
+            ower = photo['owner_id']
+            photo_id = photo['id']
+            media = f'photo{ower}_{photo_id},'
+            media_box += media
+        print(media_box)
+        self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'), attachment=media_box)
+
+    def profiles_add(self, info, age_my, offset):
+        profiles = self.tools.user_serch((info[0]['city']['id']), age_my - 5, age_my + 5, self.sex_id(info[0]['sex']),offset)
+        for search in range((len(profiles))):
+            offset += search
+            if ((str(profiles[search]['id'])) not in select_user_int_off(int(info[0]['id']))) and ((str(info[0]['id'])) not in select_user_int()):
+                self.photo_list(profiles, info, search)
+            elif (str(profiles[search]['id'])) in select_user_int_off(int(info[0]['id'])):
+                continue
+            else:
+                self.photo_list(profiles, info, search)
+
 
     def handler(self):
         longpull = VkLongPoll(self.bot)
@@ -49,47 +72,18 @@ class BotInterface():
 
                     try:
                         if info[0]['relation'] != 4:
-                            profiles = self.tools.user_serch((info[0]['city']['id']), age_my-5, age_my+5, self.sex_id(info[0]['sex']), offset)
-                            for search in range((len(profiles))):
-                                profiles_big = self.tools.get_profile_info(profiles[search]["id"])
-                                print(profiles_big) # отладка
-                                if ((str(profiles[search]['id'])) not in select_user_int_off(int(info[0]['id']))) and ((str(info[0]['id'])) not in select_user_int()) :
-                                    user_int_insert(int(info[0]['id']))
-                                    self.photo_list(profiles, info,search)
-
-
-                                elif (str(profiles[search]['id'])) not in select_user_int_off(int(info[0]['id'])):
-                                    self.photo_list(profiles, info, search)
-
-
+                            self.profiles_add(info, age_my, offset)
                             self.message_send((info[0]['id']), 'Для продолжения наберите "далее"')
                     except KeyError:
                         self.message_send((info[0]['id']), 'Укажите свое семейное положение в профиле')
 
                 elif event.text.lower() in ('далее'):
-
-                    profiles = self.tools.user_serch((info[0]['city']['id']), age_my-5, age_my+5, self.sex_id(info[0]['sex']), offset)
-                    for search in range((len(profiles))):
-                        offset += search
-                        if (str(profiles[search]['id'])) in select_user_int_off(int(info[0]['id'])):
-                            continue
-                        self.photo_list(profiles, info, search)
-
+                    self.profiles_add(info, age_my, offset)
                     self.message_send((info[0]['id']), 'Для продолжения наберите "далее"')
                 else: 
                     self.message_send(event.user_id, 'Неизвестная команда!!!')
 
-    def photo_list(self, profiles, info, search):
-        user_int_off_insert(int(profiles[search]['id']), (int(info[0]['id'])))
-        photos = self.tools.photo_like(profiles[search]['id'])
-        media_box = ''
-        for photo in photos:
-            ower = photo['owner_id']
-            photo_id = photo['id']
-            media = f'photo{ower}_{photo_id},'
-            media_box += media
-        print(media_box)
-        self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'), attachment=media_box)
+
 
 
 
