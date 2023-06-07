@@ -34,13 +34,12 @@ class BotInterface():
             photo_id = photo['id']
             media = f'photo{ower}_{photo_id},'
             media_box += media
-        print(media_box)
         self.message_send((info[0]['id']), (f'{profiles[search]["name"]}, https://vk.com/id{profiles[search]["id"]}'), attachment=media_box)
 
     def profiles_add(self, info, age_my, offset):
         profiles = self.tools.user_serch((info[0]['city']['id']), age_my - 5, age_my + 5, self.sex_id(info[0]['sex']),offset)
         for search in range((len(profiles))):
-            offset += search
+            offset += (search +1)
             if ((str(profiles[search]['id'])) not in select_user_int_off(int(info[0]['id']))) and ((str(info[0]['id'])) not in select_user_int()):
                 self.photo_list(profiles, info, search)
             elif (str(profiles[search]['id'])) in select_user_int_off(int(info[0]['id'])):

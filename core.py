@@ -31,7 +31,7 @@ class VkTools():
                                         'age_from': age_from,
                                         'age_to': age_to,
                                         'sex': sex,
-                                        'count': 8,
+                                        'count': 10,
                                         'offset': offset
                                         })
 
